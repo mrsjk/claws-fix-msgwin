@@ -1,0 +1,31 @@
+Description: always open msg in new window
+ Hardcoded change to always open msg in new window. Would better be handled
+ via GENERIC_UMPC but that's full of bugs and evidences of abandonment
+ .
+ claws-mail (3.14.1-3) unstable; urgency=medium
+ .
+   * src/summaryvew.c
+   - hardcode new_window as TRUE in summary_display_msg_full() regardles of arg
+Author: mj mariusz.jadczak@gmail.com
+
+--- claws-mail-3.14.1.orig/src/summaryview.c
++++ claws-mail-3.14.1/src/summaryview.c
+@@ -3596,6 +3596,18 @@ static void summary_display_msg_full(Sum
+ 				     GtkCMCTreeNode *row,
+ 				     gboolean new_window, gboolean all_headers)
+ {
++	/*
++	 * mj change: always open in new window
++	 *
++	 * should really be handled like GENERIC_UMPC,
++	 * but that is seemingly endless rabbit hole, full of bugs
++	 * and clear evidence of abandonment,
++	 *
++	 * thus hardcoded forced change (may alternatively be handled
++	 * per invokation, but i do not need stupid choice of panned
++	 * message view within main window)
++	 */
++	new_window = TRUE;
+ 	GtkCMCTree *ctree = GTK_CMCTREE(summaryview->ctree);
+ 	MsgInfo *msginfo;
+ 	gint val;
