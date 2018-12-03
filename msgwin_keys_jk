@@ -1,0 +1,43 @@
+Description: hardcode j,k and backslash keys in windowed message view
+ always use j k for line scrolling for windowed message view
+ in addition to defined keys, this allow using j k for both
+ message scroll hardcoded here and menu-defined message list
+ scroll without conflict,
+ additionally close window with hardcoded backslash key (arbitrary
+ choosen no-other-purpose near-right-hand key)
+ .
+ claws-mail (3.14.1-3) unstable; urgency=medium
+ .
+   * src/mimeview.c
+   - hardcode j,k keys (scroll) and backslash (close) in windowed message view
+Author: Mariusz Jadczak <mariusz.jadczak@gmail.com>
+
+--- claws-mail-3.14.1.orig/src/mimeview.c
++++ claws-mail-3.14.1/src/mimeview.c
+@@ -1655,6 +1655,26 @@ static gint mimeview_key_pressed(GtkWidg
+ 	case GDK_KEY_Down:
+ 		mimeview_scroll_one_line(mimeview, (event->keyval == GDK_KEY_Up));
+ 		return TRUE;
++	/*
++	 * mj self comfort:
++	 * always use j k for line scrolling for windowed message view
++	 * in addition to defined keys, this allow using j k for both
++	 * message scroll hardcoded here and menu-defined message list
++	 * scroll without conflict,
++	 * additionally close window with hardcoded backslash key (arbitrary
++	 * choosen no-other-purpose near-right-hand key)
++	 */
++	case GDK_KEY_j:
++	case GDK_KEY_k:
++		if (!mimeview->messageview->window)
++		    	break;
++		mimeview_scroll_one_line(mimeview, (event->keyval == GDK_KEY_k));
++		return TRUE;
++	case GDK_KEY_backslash:
++		if (!mimeview->messageview->window)
++		    	break;
++		messageview_destroy(mimeview->messageview);
++		return TRUE;
+ 	default:
+ 		break;
+ 	}
